@@ -219,8 +219,9 @@ body{
     color:white;
     background:linear-gradient(
         135deg,
-        #6366f1,
-        #ec4899
+        #1e3a8a,
+        #2563eb,
+        #38bdf8
     );
     box-shadow:0 6px 18px rgba(0,0,0,0.1);
     transition:0.3s;
@@ -300,9 +301,9 @@ body{
     font-weight:600;
     background:linear-gradient(
         135deg,
-        #ec4899,
-        #8b5cf6
-    );
+        #1e3a8a,
+        #2563eb,
+        #38bdf8
     box-shadow:0 8px 22px rgba(0,0,0,0.1);
     transition:0.3s;
 }
@@ -318,9 +319,9 @@ body{
     background:
     linear-gradient(
         135deg,
+        #1e3a8a,
         #2563eb,
-        #7c3aed,
-        #ec4899
+        #38bdf8
     );
 }
 
