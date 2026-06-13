@@ -1,0 +1,42 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CV/Profile Static Website
+
+Parameters:
+
+  BucketName:
+    Type: String
+
+Resources:
+
+  CVWebsiteBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref BucketName
+
+      WebsiteConfiguration:
+        IndexDocument: index.html
+
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        IgnorePublicAcls: false
+        BlockPublicPolicy: false
+        RestrictPublicBuckets: false
+
+  CVWebsiteBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref CVWebsiteBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal: "*"
+            Action:
+              - s3:GetObject
+            Resource:
+              - !Sub '${CVWebsiteBucket.Arn}/*'
+
+Outputs:
+
+  WebsiteURL:
+    Value: !GetAtt CVWebsiteBucket.WebsiteURL
