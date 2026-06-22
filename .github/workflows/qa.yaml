@@ -6,6 +6,8 @@ on:
       - 'env/qa/config.json'
       - 'template.yaml'
 
+  workflow_dispatch:
+
 jobs:
   validate-qa:
     runs-on: ubuntu-latest

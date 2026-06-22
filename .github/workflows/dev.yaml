@@ -6,6 +6,8 @@ on:
       - 'env/dev/config.json'
       - 'template.yaml'
 
+  workflow_dispatch:
+
 jobs:
   validate-dev:
     runs-on: ubuntu-latest
