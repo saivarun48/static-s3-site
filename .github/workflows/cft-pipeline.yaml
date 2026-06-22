@@ -1,0 +1,84 @@
+name: CloudFormation Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Select Environment'
+        required: true
+        type: choice
+        options:
+          - dev
+          - qa
+          - prod
+
+jobs:
+
+  validate:
+    runs-on: ubuntu-latest
+
+    env:
+      ENV_NAME: ${{ github.event.inputs.environment }}
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show Selected Environment
+        run: |
+          echo "Selected ENV: $ENV_NAME"
+
+      - name: Show Config File
+        run: |
+          cat env/$ENV_NAME/config.json
+
+      - name: Validate JSON
+        run: |
+          jq empty env/$ENV_NAME/config.json
+
+      - name: Validate YAML
+        run: |
+          python -c "import yaml; yaml.safe_load(open('template.yaml'))"
+
+      - name: Simulate CloudFormation Validate
+        run: |
+          echo "aws cloudformation validate-template"
+          echo "Template validated successfully"
+
+  changeset:
+    needs: validate
+    runs-on: ubuntu-latest
+
+    env:
+      ENV_NAME: ${{ github.event.inputs.environment }}
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Simulate Change Set
+        run: |
+          echo "Creating Change Set for $ENV_NAME"
+          echo "No resources changed"
+
+  deploy:
+    needs: changeset
+    runs-on: ubuntu-latest
+
+    environment:
+      name: ${{ github.event.inputs.environment }}
+
+    env:
+      ENV_NAME: ${{ github.event.inputs.environment }}
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Simulate Deploy
+        run: |
+          echo "Deploying stack to $ENV_NAME"
+          echo "Deployment completed"
