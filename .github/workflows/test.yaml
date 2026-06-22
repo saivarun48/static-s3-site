@@ -1,0 +1,28 @@
+name: TEST CI
+
+on:
+  push:
+    paths:
+      - 'env/test/config.json'
+      - 'template.yaml'
+
+jobs:
+  validate-dev:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Show Files
+        run: ls -R
+
+      - name: Validate DEV Config
+        run: jq empty env/test/config.json
+
+      - name: Validate Template
+        run: |
+          python -c "import yaml; yaml.safe_load(open('template.yaml'))"
+
+      - name: Simulate TEST
+        run: echo "TEST workflow executed"

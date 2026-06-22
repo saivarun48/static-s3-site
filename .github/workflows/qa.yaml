@@ -1,0 +1,28 @@
+name: QA CI
+
+on:
+  push:
+    paths:
+      - 'env/qa/config.json'
+      - 'template.yaml'
+
+jobs:
+  validate-qa:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Show Files
+        run: ls -R
+
+      - name: Validate QA Config
+        run: jq empty env/qa/config.json
+
+      - name: Validate Template
+        run: |
+          python -c "import yaml; yaml.safe_load(open('template.yaml'))"
+
+      - name: Simulate QA
+        run: echo "QA workflow executed"
