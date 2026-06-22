@@ -1,0 +1,66 @@
+name: ChangeSet and Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+
+      environment:
+        description: 'Select Environment'
+        required: true
+        type: choice
+        options:
+          - dev
+          - qa
+          - prod
+
+      action:
+        description: 'Select Action'
+        required: true
+        type: choice
+        options:
+          - changeset
+          - deploy
+
+jobs:
+
+  execute:
+    runs-on: ubuntu-latest
+
+    env:
+      ENV_NAME: ${{ github.event.inputs.environment }}
+      ACTION_TYPE: ${{ github.event.inputs.action }}
+
+    environment:
+      name: ${{ github.event.inputs.environment }}
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show Inputs
+        run: |
+          echo "ENV: $ENV_NAME"
+          echo "ACTION: $ACTION_TYPE"
+
+      - name: Show Config
+        run: |
+          cat env/$ENV_NAME/config.json
+
+      - name: Validate JSON
+        run: |
+          jq empty env/$ENV_NAME/config.json
+
+      - name: Validate Template
+        run: |
+          python -c "import yaml; yaml.safe_load(open('template.yaml'))"
+
+      - name: Create Change Set
+        if: ${{ env.ACTION_TYPE == 'changeset' }}
+        run: |
+          echo "Creating Change Set for $ENV_NAME"
+
+      - name: Deploy Stack
+        if: ${{ env.ACTION_TYPE == 'deploy' }}
+        run: |
+          echo "Deploying stack to $ENV_NAME"

@@ -1,0 +1,34 @@
+name: Template Validation
+
+on:
+  push:
+    paths:
+      - 'template.yaml'
+      - 'env/**/config.json'
+
+jobs:
+
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate YAML
+        run: |
+          python -c "import yaml; yaml.safe_load(open('template.yaml'))"
+
+      - name: Validate DEV JSON
+        run: jq empty env/dev/config.json
+
+      - name: Validate QA JSON
+        run: jq empty env/qa/config.json
+
+      - name: Validate PROD JSON
+        run: jq empty env/prod/config.json
+
+      - name: Simulate CFN Validation
+        run: |
+          echo "CloudFormation template validated"
